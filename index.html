@@ -373,6 +373,9 @@
             var week_1_decimalAbsence = 0;
             var week_2_decimalAbsence = 0;
             var week_3_decimalAbsence = 0;
+            
+            var daily_tardy = 0;
+            var total_tardy = 0;
 
 
             for (i = 10; i < 31; i++) {
@@ -548,6 +551,11 @@
                     }
                     else { daily_scheduled = 8; }
                 }
+                
+                // Daily tardy calculation
+                
+                daily_tardy = 0;
+                daily_tardy = ((time_diff_hours + ((time_diff_minutes) / 60))%2);
 
                 // Eliminate time entry for August 1,2,3,4,5 - 2019
 
@@ -562,19 +570,24 @@
                         dailyAbsence = 0;
                         daily_scheduled = 0;
                         dailyDecimalAbsence = 0;
+                        daily_tardy = 0;
                     }
                     else { daily_scheduled = 8; }
                 }
 
                 // Eliminate absence calculated for Saturdays and Sundays
 
-                if (i == 15 || i == 16 || i == 22 || i == 23 || i == 29 || i == 30) { dailyAbsence = 0; dailyDecimalAbsence = 0; }
+                if (i == 15 || i == 16 || i == 22 || i == 23 || i == 29 || i == 30) { 
+                  dailyAbsence = 0;
+                  dailyDecimalAbsence = 0;
+                  daily_tardy = 0;
+                }
 
                 // Eliminate absence calculated for 3rd week on 2 week periods
                 // $(this).val() == 'period3' || $(this).val() == 'period9' || $(this).val() == 'period13' || $(this).val() == 'period21' || $(this).val() == 'period24'
                 if (jQuery('#PeriodSelector').val() != "period4" && jQuery('#PeriodSelector').val() != "period9" && jQuery('#PeriodSelector').val() != "period15" && jQuery('#PeriodSelector').val() != "period21" && jQuery('#PeriodSelector').val() != "period24") {
 
-                    if (i == 24 || i == 25 || i == 26 || i == 27 || i == 28) { dailyAbsence = 0; dailyDecimalAbsence = 0; }
+                    if (i == 24 || i == 25 || i == 26 || i == 27 || i == 28) { dailyAbsence = 0; dailyDecimalAbsence = 0; daily_tardy = 0; }
 
                 }
 
@@ -588,8 +601,19 @@
                     if (holiday_status_calc) {
                         dailyAbsence = 0;
                         dailyDecimalAbsence = 0;
+                        daily_tardy = 0;
                     }
                 }
+                
+                
+                /* Total Tardy calculation */
+                
+                
+                if(daily_tardy > 0 && (time_diff_hours + ((time_diff_minutes) / 60)) < 8 && daily_tardy < 1.83333333333333333333333333) { // 1.83 is 1 hour 50 minutes. Tardy is calculated only if tardy is more than 10 minutes. 
+                    daily_tardy = 2 - daily_tardy;
+                    total_tardy = total_tardy + daily_tardy;
+                }
+                jQuery("#total_tardy").html(total_tardy.toFixed(2));
 
 
 
@@ -751,6 +775,9 @@
             console.log("Week 3 Absence: " + week_3_absence);
             console.log("Week 3 Scheduled: " + week_3_scheduled);
             console.log("Week 3 Unscheduled: " + week_3_unscheduled);
+            
+            console.log("Daily tardy: " + daily_tardy);
+            console.log("total tardy: " + total_tardy);
             /*
             if ((scheduledhour - overall_total_absence) > 0) {
                 if (overall_total_reg > (scheduledhour - overall_total_absence)) {
@@ -1807,7 +1834,13 @@
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="3" class="footer-cells" style="text-align: right; height: 18pt; padding-right: 4pt; width: 200pt;">
+                    <td class="footer-cells" style="text-align: right; height: 18pt; padding-right: 4pt;">
+                        <strong>Tardy Hours</strong>
+                    </td>
+                    <td class="footer-cells">
+                        <div id="total_tardy"></div>
+                    </td>
+                    <td class="footer-cells" style="text-align: right; height: 18pt; padding-right: 4pt; width: 200pt;">
                         <span id="regularHoursDefLabel" style="color: red;">
                             <strong>Total&nbsp;</strong>
                         </span>
