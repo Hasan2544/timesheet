@@ -289,11 +289,13 @@ $(window).on('load', function () {
                 $('#scheduledhours').hide();
                 $('#unscheduledhours').hide();
                 $('#absence').hide();
+                $('#total_tardy').hide();
             }
             else {
                 $('#scheduledhours').show();
                 $('#unscheduledhours').show();
                 $('#absence').show();
+                $('#total_tardy').show();
             }
         }
 
