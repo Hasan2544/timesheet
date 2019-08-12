@@ -347,6 +347,10 @@ $(window).on('load', function () {
             
             var daily_tardy = 0;
             var total_tardy = 0;
+            var week_1_tardy = 0;
+            var week_2_tardy = 0;
+            var week_3_tardy = 0;
+
 
 
             for (i = 10; i < 31; i++) {
@@ -565,6 +569,15 @@ $(window).on('load', function () {
                 if(daily_tardy > 0 && (time_diff_hours + ((time_diff_minutes) / 60)) < 8 && daily_tardy < 1.83333333333333333333333333) { // 1.83 is 1 hour 50 minutes. Tardy is calculated only if tardy is more than 10 minutes. 
                     daily_tardy = 2 - daily_tardy;
                     total_tardy = total_tardy + daily_tardy;
+                    if (i <= 16) {
+                        week_1_tardy = week_1_tardy + daily_tardy;
+                    }
+                    if (i > 16 && i <= 23) {
+                        week_2_tardy = week_2_tardy + daily_tardy;
+                    }
+                    if (i > 23 && i <= 30) {
+                        week_3_tardy = week_3_tardy + daily_tardy;
+                    }
                 }
                 jQuery("#total_tardy").html(total_tardy.toFixed(2));
 
@@ -572,10 +585,8 @@ $(window).on('load', function () {
 
                 /* Week 1 totals calculation */
                 if (i <= 16) {
-
                     weekly_total = weekly_total + time_diff_hours + ((time_diff_minutes) / 60);
-
-
+                    
                     if (weekly_total < 40 && weekly_total >= 0) {
                         week_1_reg = weekly_total;
                         week_1_ot = 0;
@@ -611,13 +622,12 @@ $(window).on('load', function () {
                     week_1_decimalAbsence = week_1_decimalAbsence + dailyDecimalAbsence;
                 }
 
-
+                
                 /* Week 2 totals calculation */
                 if (i == 17) { weekly_total = 0; holiday_total_hours = 0; interimVar = 0; }
                 if (i > 16 && i <= 23) {
-
                     weekly_total = weekly_total + time_diff_hours + ((time_diff_minutes) / 60);
-
+                    
                     if (weekly_total < 40 && weekly_total >= 0) {
                         week_2_reg = weekly_total;
                         week_2_ot = 0;
@@ -654,9 +664,8 @@ $(window).on('load', function () {
                 /* Week 3 totals calculation */
                 if (i == 24) { weekly_total = 0; holiday_total_hours = 0; }
                 if (i > 23 && i <= 30) {
-
                     weekly_total = weekly_total + time_diff_hours + ((time_diff_minutes) / 60);
-
+                    
                     if (weekly_total < 40 && weekly_total >= 0) {
                         week_3_reg = weekly_total;
                         week_3_ot = 0;
@@ -709,25 +718,28 @@ $(window).on('load', function () {
             */
 
             //Central office decided to use weekly method for unscheduled calculation on 03/05/2018. Therefore wee_1_absence is used instead of week_1_decimalAbsence.
-            week_1_unscheduled = Math.max(0, (week_1_reg - (week_1_scheduled - week_1_absence)));
-            week_2_unscheduled = Math.max(0, (week_2_reg - (week_2_scheduled - week_2_absence)));
-            week_3_unscheduled = Math.max(0, (week_3_reg - (week_3_scheduled - week_3_absence)));
+            week_1_unscheduled = Math.max(0, (week_1_reg - week_1_scheduled + week_1_tardy));
+            week_2_unscheduled = Math.max(0, (week_2_reg - week_2_scheduled + week_2_tardy));
+            week_3_unscheduled = Math.max(0, (week_3_reg - week_3_scheduled + week_3_tardy));
 
 
             overall_total_scheduled = week_1_scheduled + week_2_scheduled + week_3_scheduled;
             overall_total_unscheduled = week_1_unscheduled + week_2_unscheduled + week_3_unscheduled;
-
-            console.log("Week 1 Absence: " + week_1_absence);
+            console.clear();
+            console.log("Week 1 PTO Absence: " + week_1_absence);
             console.log("Week 1 Scheduled: " + week_1_scheduled);
             console.log("Week 1 Unscheduled: " + week_1_unscheduled);
+            console.log("Week 1 Tardy: " + week_1_tardy);
 
-            console.log("Week 2 Absence: " + week_2_absence);
+            console.log("Week 2 PTO Absence: " + week_2_absence);
             console.log("Week 2 Scheduled: " + week_2_scheduled);
             console.log("Week 2 Unscheduled: " + week_2_unscheduled);
+            console.log("Week 2 Tardy: " + week_2_tardy);
 
-            console.log("Week 3 Absence: " + week_3_absence);
+            console.log("Week 3 PTO Absence: " + week_3_absence);
             console.log("Week 3 Scheduled: " + week_3_scheduled);
             console.log("Week 3 Unscheduled: " + week_3_unscheduled);
+            console.log("Week 3 Tardy: " + week_3_tardy);
             
             console.log("Daily tardy: " + daily_tardy);
             console.log("total tardy: " + total_tardy);
