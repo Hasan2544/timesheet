@@ -718,9 +718,9 @@ $(window).on('load', function () {
             */
 
             //Central office decided to use weekly method for unscheduled calculation on 03/05/2018. Therefore wee_1_absence is used instead of week_1_decimalAbsence.
-            week_1_unscheduled = Math.max(0, (week_1_reg - week_1_scheduled + week_1_tardy));
-            week_2_unscheduled = Math.max(0, (week_2_reg - week_2_scheduled + week_2_tardy));
-            week_3_unscheduled = Math.max(0, (week_3_reg - week_3_scheduled + week_3_tardy));
+            week_1_unscheduled = Math.max(0, (week_1_reg - week_1_scheduled + week_1_tardy + week_1_absence));
+            week_2_unscheduled = Math.max(0, (week_2_reg - week_2_scheduled + week_2_tardy + week_2_absence));
+            week_3_unscheduled = Math.max(0, (week_3_reg - week_3_scheduled + week_3_tardy + week_3_absence));
 
 
             overall_total_scheduled = week_1_scheduled + week_2_scheduled + week_3_scheduled;
